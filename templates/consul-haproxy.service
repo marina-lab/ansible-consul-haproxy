@@ -1,0 +1,21 @@
+[Unit]
+Description=consul-haproxy
+After=consul.service
+Requires=consul.service
+
+[Service]
+Restart=on-failure
+
+ExecStart=/bin/bash -c \
+    "/bin/docker start -a consul-haproxy \
+    || /bin/docker run \
+    --name consul-haproxy \
+    {{ consul_haproxy_image }}
+    -f {{ consul_haproxy_conf }}
+
+ExecStop=/bin/bash -c \
+    "/bin/docker stop consul-haproxy \
+    && /bin/docker rm consul-haproxy"
+
+[Install]
+WantedBy=multi-user.target

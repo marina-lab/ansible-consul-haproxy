@@ -1,0 +1,8 @@
+---
+
+consul_haproxy_image: marina/consul-haproxy:0.1.0
+# Required: path to consul-haproxy configuration file
+#consul_haproxy_conf:
+
+# Required: path to haproxy template
+#consul_haproxy_template:

@@ -1,0 +1,4 @@
+ - name: restart consul-haproxy
+   service:
+     name: consul-haproxy
+     state: restarted

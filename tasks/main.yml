@@ -1,0 +1,32 @@
+# Deploy docker-consul-haproxy
+ - name: pull consul-haproxy image
+   docker_pull:
+     repo: "{{ consul_haproxy_image }}"
+
+ - name: copy haproxy template
+   copy:
+     src: "{{ haproxy_template }}"
+     dest: /var/docker_volumes/consul-haproxy/haproxy-template.conf
+
+
+ - name: template consul-haproxy configuration
+   copy:
+     src: "{{ consul_haproxy_conf }}"
+     dest: /var/docker_volumes/consul-haproxy/haproxy-consul-conf.json
+
+ - name: template consul-haproxy.service
+   template:
+     src: consul-haproxy.service
+     dest: /usr/lib/systemd/system/consul-haproxy.service
+   register: consul_haproxy_unit
+   notify: restart consul-haproxy
+
+ - name: systemctl daemon-reload
+   command: /bin/systemctl daemon-reload
+   when: consul_haproxy_unit.changed
+
+ - name: enable and start consul-haproxy.service
+   service:
+     name: consul-haproxy
+     enabled: yes
+     state: started
