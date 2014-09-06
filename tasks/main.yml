@@ -1,17 +1,24 @@
 # Deploy docker-consul-haproxy
- - name: pull consul-haproxy image
-   docker_pull:
-     repo: "{{ consul_haproxy_image }}"
+ - name: create /etc/consul-haproxy
+   file:
+     path: /etc/consul-haproxy
+     state: directory
 
  - name: copy haproxy template
    copy:
      src: files/haproxy-template.conf
-     dest: /var/docker_volumes/consul-haproxy/haproxy-template.conf
+     dest: /etc/consul-haproxy/haproxy-template.conf
 
- - name: template consul-haproxy configuration
+ - name: copy consul-haproxy configuration
    copy:
-     src: files/haproxy-consul-conf.json
-     dest: /var/docker_volumes/consul-haproxy/haproxy-consul-conf.json
+     src: files/consul-haproxy-conf.json
+     dest: /etc/consul-haproxy/consul-haproxy-conf.json
+
+ - name: install consul-haproxy
+   get_url:
+     url: https://github.com/hashicorp/consul-haproxy/releases/download/v0.1.0/consul-haproxy_linux_amd64
+     dest: /bin/consul-haproxy
+     mode: 0700
 
  - name: template consul-haproxy.service
    template:

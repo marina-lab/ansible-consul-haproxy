@@ -2,23 +2,15 @@
 Description=consul-haproxy
 After=consul.service
 Requires=consul.service
+Requires=haproxy.service
 
 [Service]
 Restart=on-failure
 
 # Consul address needs to be specified here, not in conf.json
-ExecStart=/bin/bash -c \
-    "/bin/docker start -a consul-haproxy \
-    || /bin/docker run \
-    --name consul-haproxy \
-    -v /var/docker_volumes/consul-haproxy:/etc/consul-haproxy \
-    {{ consul_haproxy_image }} \
-    -f /etc/consul-haproxy/haproxy-consul-conf.json \
+ExecStart=/bin/consul-haproxy \
+    -f /etc/consul-haproxy/consul-haproxy-conf.json \
     -addr {{ private_ip }}:8500
-
-ExecStop=/bin/bash -c \
-    "/bin/docker stop consul-haproxy \
-    && /bin/docker rm consul-haproxy"
 
 [Install]
 WantedBy=multi-user.target
