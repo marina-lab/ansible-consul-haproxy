@@ -5,13 +5,12 @@
 
  - name: copy haproxy template
    copy:
-     src: "{{ haproxy_template }}"
+     src: files/haproxy-template.conf
      dest: /var/docker_volumes/consul-haproxy/haproxy-template.conf
-
 
  - name: template consul-haproxy configuration
    copy:
-     src: "{{ consul_haproxy_conf }}"
+     src: files/haproxy-consul-conf.json
      dest: /var/docker_volumes/consul-haproxy/haproxy-consul-conf.json
 
  - name: template consul-haproxy.service
